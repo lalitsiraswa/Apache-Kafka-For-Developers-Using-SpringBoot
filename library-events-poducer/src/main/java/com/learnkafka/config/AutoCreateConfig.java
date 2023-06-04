@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
-@Profile("local")
+@Profile("local") // this configuration will only be available for 'local' profile
 public class AutoCreateConfig {
     @Bean
     public NewTopic libraryEvents(){
