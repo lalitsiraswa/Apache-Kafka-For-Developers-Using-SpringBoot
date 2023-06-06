@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learnkafka.domain.LibraryEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.Header;
+import org.apache.kafka.common.header.internals.RecordHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -13,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -63,7 +66,10 @@ public class LibraryEventProducer {
     }
 
     private ProducerRecord<Integer, String> buildProducerRecord(Integer key, String value, String topic) {
-        return new ProducerRecord<Integer, String>(topic, null, key, value, null);
+        // Adding RecordHeader
+        List<Header> recordHeaders = List.of(new RecordHeader("event-source", "scanner".getBytes()),
+                new RecordHeader("developed-by", "KloudSpot".getBytes()));
+        return new ProducerRecord<Integer, String>(topic, null, key, value, recordHeaders);
     }
 
     public SendResult<Integer, String> sendLibraryEventSynchronous(LibraryEvent libraryEvent) throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
