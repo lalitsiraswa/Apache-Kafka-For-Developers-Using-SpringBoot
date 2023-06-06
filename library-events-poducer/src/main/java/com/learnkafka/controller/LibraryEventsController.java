@@ -25,8 +25,9 @@ public class LibraryEventsController {
 //        TODO: Invoke Kafka Producer
         log.info("before sendLibraryEvent");
         // libraryEventProducer.sendLibraryEvent(libraryEvent); // This one is the Asynchronous Call
-        SendResult<Integer, String> sendResult = libraryEventProducer.sendLibraryEventSynchronous(libraryEvent); // This one is Synchronous Call
-        log.info("SendResult is {}", sendResult.toString());
+        // SendResult<Integer, String> sendResult = libraryEventProducer.sendLibraryEventSynchronous(libraryEvent); // This one is Synchronous Call
+        // log.info("SendResult is {}", sendResult.toString());
+        libraryEventProducer.sendLibraryEvent_Approach2(libraryEvent); // This one is the Asynchronous Call
         log.info("after sendLibraryEvent");
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
     }
