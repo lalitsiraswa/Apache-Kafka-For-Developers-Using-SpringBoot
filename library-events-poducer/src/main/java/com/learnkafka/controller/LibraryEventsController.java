@@ -2,6 +2,7 @@ package com.learnkafka.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.learnkafka.domain.LibraryEvent;
+import com.learnkafka.domain.LibraryEventType;
 import com.learnkafka.producer.LibraryEventProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,16 @@ public class LibraryEventsController {
     public ResponseEntity<LibraryEvent> postLibraryEvent(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
 //        TODO: Invoke Kafka Producer
         log.info("before sendLibraryEvent");
+        libraryEvent.setLibraryEventType(LibraryEventType.NEW);
+
         // libraryEventProducer.sendLibraryEvent(libraryEvent); // This one is the Asynchronous Call
         // SendResult<Integer, String> sendResult = libraryEventProducer.sendLibraryEventSynchronous(libraryEvent); // This one is Synchronous Call
         // log.info("SendResult is {}", sendResult.toString());
+
         libraryEventProducer.sendLibraryEvent_Approach2(libraryEvent); // This one is the Asynchronous Call
+
         log.info("after sendLibraryEvent");
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
     }
+//    TODO: PUT Method
 }
