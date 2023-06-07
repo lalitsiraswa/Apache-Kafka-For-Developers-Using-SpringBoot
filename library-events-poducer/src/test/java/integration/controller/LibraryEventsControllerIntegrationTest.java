@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,6 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 // launch the application, it is going to launch in the same PORT, which is by-default 8080, So this is going to
 // avoid the conflicts with the PORT.
 @SpringBootTest(classes = LibraryEventsPoducerApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EmbeddedKafka(topics = {"library-events"}, partitions = 3)
+// Here we override the 'spring.kafka.producer.bootstrap-servers' property of application.yml file to 'spring.embedded.kafka.brokers'
+// we get this from 'EmbeddedKafkaBroker,java' file.
+@TestPropertySource(properties = {"spring.kafka.producer.bootstrap-servers=${spring.embedded.kafka.brokers}",
+        "spring.kafka.admin.properties.bootstrap.servers=${spring.embedded.kafka.brokers}"})
 public class LibraryEventsControllerIntegrationTest {
     @Autowired
     TestRestTemplate testRestTemplate;
