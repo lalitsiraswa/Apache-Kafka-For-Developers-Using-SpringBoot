@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -21,8 +22,8 @@ import java.util.concurrent.TimeoutException;
 public class LibraryEventsController {
     @Autowired
     LibraryEventProducer libraryEventProducer;
-    @PostMapping("/v1/libraryevent")
-    public ResponseEntity<LibraryEvent> postLibraryEvent(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
+    @PostMapping("/v1/libraryevent") // @Valid validate all the Constraints, that we provide in 'LibraryEvent.java' Class
+    public ResponseEntity<LibraryEvent> postLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
 //        TODO: Invoke Kafka Producer
         log.info("before sendLibraryEvent");
         libraryEvent.setLibraryEventType(LibraryEventType.NEW);
